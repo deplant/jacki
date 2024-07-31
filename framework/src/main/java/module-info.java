@@ -1,0 +1,32 @@
+module java4ever.framework {
+	requires transitive java4ever.binding;
+	requires transitive deplant.commons;
+	requires transitive deplant.javapoet;
+	requires java.compiler;
+	requires com.fasterxml.jackson.datatype.jdk8;
+	requires com.fasterxml.jackson.module.paramnames;
+	requires com.fasterxml.jackson.datatype.jsr310;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.annotation;
+    exports tech.deplant.jacki.framework;
+	exports tech.deplant.jacki.framework.artifact;
+	exports tech.deplant.jacki.framework.contract;
+	exports tech.deplant.jacki.framework.template;
+	exports tech.deplant.jacki.framework.datatype;
+	exports tech.deplant.jacki.framework.generator;
+	exports tech.deplant.jacki.framework.subscription;
+	opens tech.deplant.jacki.framework to com.fasterxml.jackson.databind;
+	opens tech.deplant.jacki.framework.contract to com.fasterxml.jackson.databind;
+	opens tech.deplant.jacki.framework.template to com.fasterxml.jackson.databind;
+	opens tech.deplant.jacki.framework.generator to com.fasterxml.jackson.databind;
+	opens tech.deplant.jacki.framework.datatype to com.fasterxml.jackson.databind;
+	opens tech.deplant.jacki.framework.artifact to com.fasterxml.jackson.databind;
+	opens tech.deplant.jacki.framework.subscription to com.fasterxml.jackson.databind;
+	exports tech.deplant.jacki.framework.contract.multisig;
+	opens tech.deplant.jacki.framework.contract.multisig to com.fasterxml.jackson.databind;
+	exports tech.deplant.jacki.framework.contract.tip3;
+	opens tech.deplant.jacki.framework.contract.tip3 to com.fasterxml.jackson.databind;
+	exports tech.deplant.jacki.framework.gql;
+	opens tech.deplant.jacki.framework.gql to com.fasterxml.jackson.databind;
+	exports tech.deplant.jacki.framework.contract.multisig2;
+}

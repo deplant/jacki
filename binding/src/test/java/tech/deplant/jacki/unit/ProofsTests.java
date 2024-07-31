@@ -1,0 +1,37 @@
+package tech.deplant.jacki.unit;
+
+import com.yegor256.OnlineMeans;
+import com.yegor256.WeAreOnline;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tech.deplant.jacki.binding.Processing;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@Execution(ExecutionMode.CONCURRENT)
+@ExtendWith(WeAreOnline.class)
+public class ProofsTests {
+
+	private static final Logger log = LoggerFactory.getLogger(ProofsTests.class);
+
+	@BeforeAll
+	public static void loadSdk() {
+		TestEnv.loadEverSdk();
+	}
+
+	@Test
+	@OnlineMeans(url = TestEnv.NODESE_URL, connectTimeout = 500, readTimeout = 1500)
+	public void cancel_monitor_not_throws_for_random_queue() {
+		int ctxId = TestEnv.newContext();
+		assertDoesNotThrow(() -> Processing.cancelMonitor(ctxId,"aaa"));
+	}
+
+}

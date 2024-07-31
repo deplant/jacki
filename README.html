@@ -1,0 +1,489 @@
+<h1 id="jacki">Jacki</h1>
+<p><a href="https://shields.io/"><img src="https://img.shields.io/badge/Java-22-green.svg" alt="JDK version"></a>
+<a href="https://github.com/tvmlabs/tvm-sdk"><img src="https://img.shields.io/badge/TVM%20SDK-v2.0.0.an-orange" alt="SDK version">)</a>
+<a href="https://shields.io/"><img src="https://img.shields.io/badge/License-Apache%202.0-brown.svg" alt="License"></a>
+<a href="https://t.me/deplant_news_en"><img src="https://img.shields.io/badge/chat-on%20telegram-9cf.svg" alt="Channel on Telegram"></a>
+<a href="https://javadoc.io/doc/tech.deplant.jacki/tvm-api"><img src="https://javadoc.io/badge2/tech.deplant.jacki/tvm-api/javadoc.svg" alt="javadoc"></a></p>
+<p><strong>Jacki</strong> is a feature-rich framework for smart-contracts development, testing &amp; accessing 
+TVM-compatible blockchains like <a href="https://gosh.sh/">GOSH</a>. </p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Auto-generation of Java smart contract wrapper classes from ABI+TVC artifacts. Easy way to test, deploy and interact with TVM smart contracts.</li>
+<li>Auto-conversion of ABI types to Java native types for any input/output</li>
+<li>Out-of-the-box support of Multisig Wallets, TIP 3.x FT tokens, TIP 4.x NFT tokens, EverNode-SE Givers</li>
+<li>Polymorphic inheritance for givers and multisigs for easy switch between test and prod environments</li>
+<li>Access to transaction tree of complex calls</li>
+<li>Complete typed (all types, all methods) implementation of latest <a href="https://github.com/tvmlabs/tvm-sdk/blob/main/docs/SUMMARY.md">TVM-SDK</a> JSON-RPC client API</li>
+<li>Pluggable TVM-SDK native library support (no rebuild needed, just plug-in SDK lib you like with special Loaders)</li>
+</ul>
+<h2 id="contents">Contents</h2>
+<!-- TOC -->
+<ul>
+<li><a href="#jacki">Jacki</a><ul>
+<li><a href="#features">Features</a></li>
+<li><a href="#contents">Contents</a></li>
+<li><a href="#quick-start">Quick start</a><ul>
+<li><a href="#prerequisites-java">Prerequisites (Java)</a></li>
+<li><a href="#prerequisites-kotlin">Prerequisites (Kotlin)</a></li>
+<li><a href="#add-jacki-to-your-mavengradle-setup">Add Jacki to your Maven/Gradle setup:</a></li>
+<li><a href="#deploy-your-first-contract">Deploy your first contract</a></li>
+</ul>
+</li>
+<li><a href="#examples-and-guides">Examples and Guides</a><ul>
+<li><a href="#setting-up-sdk">Setting up SDK</a><ul>
+<li><a href="#loading-tvm-sdk-library">Loading TVM-SDK library</a></li>
+<li><a href="#creating-config-context-and-specifying-endpoints">Creating config context and specifying endpoints</a></li>
+<li><a href="#configuring-sdk-with-builder">Configuring SDK with Builder</a></li>
+</ul>
+</li>
+<li><a href="#calling-tvm-sdk-methods">Calling TVM-SDK methods</a></li>
+<li><a href="#adding-abi-tvc--other-artifacts">Adding ABI, TVC &amp; other artifacts</a></li>
+<li><a href="#crypto">Crypto</a><ul>
+<li><a href="#creating-a-random-keypair">Creating a random keypair</a></li>
+<li><a href="#creating-a-random-seed">Creating a random seed</a></li>
+<li><a href="#deriving-keys-from-seed">Deriving keys from seed</a></li>
+<li><a href="#using-existing-keys--seeds">Using existing keys &amp; seeds</a></li>
+<li><a href="#using-signing-box-object">Using &quot;Signing Box&quot; object</a></li>
+</ul>
+</li>
+<li><a href="#smart-contracts">Smart-contracts</a><ul>
+<li><a href="#interacting-with-already-deployed-contracts">Interacting with already deployed contracts</a></li>
+<li><a href="#accessing-contract-account-metadata">Accessing contract account metadata</a></li>
+</ul>
+</li>
+<li><a href="#contract-generation">Contract Generation</a><ul>
+<li><a href="#calling-generator-for-your-artifacts">Calling generator for your artifacts</a></li>
+<li><a href="#accessing-your-newly-generated-contract-wrapper">Accessing your newly generated contract wrapper</a></li>
+<li><a href="#accessing-generated-function-wrappers">Accessing generated function wrappers</a></li>
+<li><a href="#calling-functions-in-various-ways">Calling Functions in various ways</a></li>
+<li><a href="#deploying-new-contracts">Deploying new contracts</a></li>
+</ul>
+</li>
+<li><a href="#using-wallets-and-other-standard-contract-wrappers">Using wallets and other standard contract wrappers</a><ul>
+<li><a href="#sending-internal-message-from-multisig-wallet">Sending Internal Message from Multisig Wallet</a></li>
+<li><a href="#encoding-as-payload">Encoding as Payload</a></li>
+</ul>
+</li>
+<li><a href="#deploying-smart-contracts">Deploying smart-contracts</a><ul>
+<li><a href="#accessing-template">Accessing Template</a></li>
+<li><a href="#prepared-deployment-set">Prepared deployment set</a></li>
+<li><a href="#variations-of-running-deploy">Variations of running deploy</a></li>
+<li><a href="#switching-givers">Switching Givers</a></li>
+<li><a href="#offline-deployment">Offline deployment</a></li>
+</ul>
+</li>
+<li><a href="#subsriptions">Subsriptions</a></li>
+<li><a href="#currency">Currency</a></li>
+<li><a href="#connecting-to-logging">Connecting to logging</a></li>
+</ul>
+</li>
+<li><a href="#getting-help">Getting Help</a><!-- TOC -->
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="quick-start">Quick start</h2>
+<h3 id="prerequisites-java-">Prerequisites (Java)</h3>
+<ul>
+<li>Install <strong>JDK 22</strong> (<a href="https://adoptium.net/temurin/releases/?version=22">downloaded here</a>)</li>
+<li>(Optional) Install <strong>EverNode-SE</strong> (<a href="https://github.com/everx-labs/evernode-se">installation guide here</a>)</li>
+</ul>
+<p><strong>Note:</strong> EverNode-SE needed only for quick start example. It&#39;s not a requirement</p>
+<h3 id="prerequisites-kotlin-">Prerequisites (Kotlin)</h3>
+<ul>
+<li>Install <strong>Kotlin 2.0.0</strong></li>
+<li>Install <strong>Gradle 8.8+</strong></li>
+<li>Make sure to setup Gradle 8.8 and JDK 22 usage both for compilation and runtime</li>
+</ul>
+<h3 id="add-jacki-to-your-maven-gradle-setup-">Add Jacki to your Maven/Gradle setup:</h3>
+<ul>
+<li>Gradle</li>
+</ul>
+<pre><code class="lang-groovy"><span class="hljs-section">dependencies</span> {
+    <span class="hljs-attribute">implementation</span> <span class="hljs-string">'tech.deplant.jacki:tvm-api:1.0.0'</span>
+}
+</code></pre>
+<ul>
+<li>Maven</li>
+</ul>
+<pre><code class="lang-xml">
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>tech.deplant.jacki<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>tvm-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+</code></pre>
+<h3 id="deploy-your-first-contract">Deploy your first contract</h3>
+<pre><code class="lang-java">// initialize TVM-SDK library
+TvmSdk.<span class="hljs-built_in">load</span>(); 
+// create config <span class="hljs-built_in">context</span>, <span class="hljs-built_in">save</span> its id
+int contextId = TvmSdk.createWithEndpoint(<span class="hljs-string">"http://localhost/graphql"</span>).orElseThrow();
+// creates <span class="hljs-built_in">random</span> pair of keys
+<span class="hljs-built_in">var</span> keys = Credentials.ofRandom(contextId); 
+// use it to deploy a <span class="hljs-built_in">new</span> <span class="hljs-built_in">contract</span>
+<span class="hljs-built_in">var</span> <span class="hljs-built_in">contract</span> = <span class="hljs-built_in">new</span> SafeMultisigWalletTemplate()
+        .prepareDeploy(contextId,<span class="hljs-number">0</span>, keys, <span class="hljs-built_in">new</span> BigInteger[]{keys.publicKeyBigInt()}, <span class="hljs-number">1</span>)
+        .deployWithGiver(EverOSGiver.V2(contextId), CurrencyUnit.VALUE(COIN, <span class="hljs-string">"1"</span>));
+// <span class="hljs-built_in">get</span> the <span class="hljs-built_in">contract</span> info
+System.out.println(<span class="hljs-built_in">contract</span>.account().id() + <span class="hljs-string">" is active: "</span> + <span class="hljs-built_in">contract</span>.account().isActive());
+</code></pre>
+<h2 id="examples-and-guides">Examples and Guides</h2>
+<h3 id="setting-up-sdk">Setting up SDK</h3>
+<p><strong>SDK</strong> setup consists of two steps:</p>
+<ol>
+<li>Loading TVM-SDK library (should be done once)</li>
+<li>Creating context/session with certain config (should be done for every new endpoint or config change)</li>
+</ol>
+<p>Both steps are described below.</p>
+<h4 id="loading-tvm-sdk-library">Loading TVM-SDK library</h4>
+<p>To load TVM-SDK connection to JVM, use <code>TvmSdk.load()</code> static method. 
+Loaded TVM-SDK is a singleton, you can&#39;t use other version of library simultaneously.
+Jacki stores wrapped copy of actual TVM-SDK libraries in its resources. To load wrapped library, run:</p>
+<pre><code class="lang-java">TvmSdk.load()<span class="hljs-comment">;</span>
+</code></pre>
+<p><strong>Note: We found problems with loading library from resources using Spring&#39;s fatJar bundles. Please, use alternative loaders described below if you use fatJar too.</strong></p>
+<p>If you want to use custom binaries or version, you should use other loaders. 
+All loaders are just ways to reach library, so you should get/build <code>ton_client</code> library first.
+You can find TVM Labs <a href="https://github.com/tvmlabs/tvm-sdk/blob/main/#download-precompiled-binaries">precompiled TVM-SDK files</a> here.
+Here are the examples of loader options:</p>
+<pre><code class="lang-java"><span class="hljs-comment">// Loads internal native lib included in your dependency</span>
+TvmSdk.<span class="hljs-keyword">load</span>();
+<span class="hljs-comment">// loads library from path saved in environment variable</span>
+TvmSdk.<span class="hljs-keyword">load</span>(AbsolutePathLoader.ofSystemEnv(<span class="hljs-string">"TON_CLIENT_LIB"</span>)); 
+<span class="hljs-comment">// loads library from ~ (user home)</span>
+TvmSdk.<span class="hljs-keyword">load</span>(AbsolutePathLoader.ofUserDir(<span class="hljs-string">"libton_client.so"</span>)); 
+<span class="hljs-comment">// loads from any absolute path</span>
+TvmSdk.<span class="hljs-keyword">load</span>(<span class="hljs-keyword">new</span> AbsolutePathLoader(Path.of(<span class="hljs-string">"/home/ton/lib/libton_client.so"</span>))); 
+<span class="hljs-comment">// loads library from java.library.path JVM argument</span>
+TvmSdk.<span class="hljs-keyword">load</span>(<span class="hljs-keyword">new</span> JavaLibraryPathLoader(<span class="hljs-string">"ton_client"</span>));
+</code></pre>
+<h4 id="creating-config-context-and-specifying-endpoints">Creating config context and specifying endpoints</h4>
+<p>Context configuration is needed to provide TVM-SDK library with your endpoints, timeouts and other settings.
+You can find a list of endpoints here: <a href="https://github.com/tvmlabs/.github/tree/main/profile">https://github.com/tvmlabs/.github/tree/main/profile</a></p>
+<pre><code class="lang-java">// creates <span class="hljs-keyword">default</span> TVM-SDK context without specifying endpoints
+<span class="hljs-built_in">int</span> contextId1 = TvmSdk.createDefault()<span class="hljs-comment">; </span>
+// creates <span class="hljs-keyword">default</span> TVM-SDK <span class="hljs-keyword">with</span> specified endpoint
+<span class="hljs-built_in">int</span> contextId2 = TvmSdk.createWithEndpoint(<span class="hljs-string">"http://localhost/graphql"</span>)<span class="hljs-comment">; </span>
+// creates TVM-SDK context from ready JSON <span class="hljs-built_in">string</span>
+<span class="hljs-built_in">int</span> contextId4 = TvmSdk.createWithJson(configJsonString)<span class="hljs-comment">;</span>
+</code></pre>
+<p>Save your contextId, you will use this id to call TVM-SDK methods.</p>
+<h4 id="configuring-sdk-with-builder">Configuring SDK with Builder</h4>
+<p>Alternatively, you can call TvmSdk.builder() that provides builder methods for all config values of TVM-SDK.
+Thus you can easily configure only needed parts of library.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">int</span> contextId3 = TvmSdk.builder()
+<span class="hljs-meta">                       .networkEndpoints</span>(<span class="hljs-string">"http://localhost/graphql"</span>)
+<span class="hljs-meta">                       .networkQueryTimeout</span>(300_000L)
+<span class="hljs-meta">                       .build</span>()<span class="hljs-comment">;</span>
+</code></pre>
+<h3 id="calling-tvm-sdk-methods">Calling TVM-SDK methods</h3>
+<p>To call TVM-SDK method, just type <ModuleCapitalCase>.<methodCamelCase>, for example:</p>
+<pre><code class="lang-java"><span class="hljs-comment">// async</span>
+Future&lt;<span class="hljs-built_in">String</span>&gt; hashHexString = Boc.getBocHash(contextId, <span class="hljs-string">"bocBase64String"</span>);
+Future&lt;JsonNode&gt; dataJson = Abi.decodeBoc(contextId, types, <span class="hljs-string">"bocBase64String"</span>, <span class="hljs-keyword">true</span>).data();
+<span class="hljs-comment">// to sync</span>
+<span class="hljs-built_in">String</span> hashHexString = TvmSdk.<span class="hljs-keyword">await</span>(Boc.getBocHash(contextId, <span class="hljs-string">"bocBase64String"</span>));
+JsonNode dataJson = TvmSdk.<span class="hljs-keyword">await</span>(Abi.decodeBoc(contextId, types, <span class="hljs-string">"bocBase64String"</span>, <span class="hljs-keyword">true</span>)).data();
+</code></pre>
+<h3 id="adding-abi-tvc-other-artifacts">Adding ABI, TVC &amp; other artifacts</h3>
+<p><strong>Jacki</strong> includes easy API to work with files and java resources
+(both json-based and byte[]-based). 
+Here are simple examples of getting contract ABIs and TVCs artifacts:</p>
+<ul>
+<li><code>ContractAbi.ofFile(&quot;/path/to/your.abi.json&quot;)</code> - reads abi from file (can be relative)</li>
+<li><code>ContractAbi.ofResource(&quot;yourresource.abi.json&quot;)</code> - reads abi from resources of your project</li>
+<li><code>ContractAbi.ofString(&quot;&quot;)</code> -reads abi from JSON string</li>
+<li><p><code>ContractAbi.ofJsonNode(node)</code> - reads abi from Jackson framework&#39;s JsonNode object</p>
+</li>
+<li><p><code>Tvc.ofFile(&quot;/path/to/your.tvc&quot;)</code> - reads tvc from file (can be relative)</p>
+</li>
+<li><code>Tvc.ofResource(&quot;yourresource.tvc&quot;)</code> - reads tvc from resources of your project</li>
+<li><code>Tvc.ofBase64String(&quot;&quot;)</code> -reads tvc from base64 encoded string</li>
+<li><code>new Tvc(bytes)</code> - reads tvc from byte array</li>
+</ul>
+<p>Also, you can check <code>JsonFile</code>, <code>JsonResource</code>, <code>ByteFile</code>, <code>ByteResource</code> helpers for custom artifacts.</p>
+<h3 id="crypto">Crypto</h3>
+<p><strong>Jacki</strong> includes basic helpers to
+create your seeds, key pairs and signatures. If
+you want some specific <strong>TVM-SDK</strong> functions, just use them
+firectly as all <strong>TVM-SDK</strong> API is available from <strong>Jacki</strong>.</p>
+<h4 id="creating-a-random-keypair">Creating a random keypair</h4>
+<pre><code class="lang-java"><span class="hljs-attribute">var keys</span> = Credentials.ofRandom(contextId);
+<span class="hljs-attribute">String sk</span> = keys.secretKey();
+<span class="hljs-attribute">String pk</span> = keys.publicKey();
+</code></pre>
+<h4 id="creating-a-random-seed">Creating a random seed</h4>
+<pre><code class="lang-java"><span class="hljs-attribute">var seed</span> = Seed.ofRandom(contextId);
+<span class="hljs-attribute">String wordsPhrase</span> = seed.phrase();
+<span class="hljs-attribute">int wordsCount</span> = seed.words();
+</code></pre>
+<h4 id="deriving-keys-from-seed">Deriving keys from seed</h4>
+<pre><code class="lang-java"><span class="hljs-attribute">var keys</span> = Credentials.ofSeed(contextId,seed);
+<span class="hljs-attribute">String sk</span> = keys.secretKey();
+<span class="hljs-attribute">String pk</span> = keys.publicKey();
+</code></pre>
+<h4 id="using-existing-keys-seeds">Using existing keys &amp; seeds</h4>
+<pre><code class="lang-java"><span class="hljs-keyword">var</span> seed = <span class="hljs-keyword">new</span> <span class="hljs-type">Seed</span>(<span class="hljs-string">"&lt;your seed phrase with 12 words or 24 with second constructor param&gt;"</span>);
+<span class="hljs-keyword">var</span> keys = <span class="hljs-keyword">new</span> <span class="hljs-type">Credentials</span>(<span class="hljs-string">"&lt;publickey string hex&gt;"</span>,<span class="hljs-string">"&lt;secretkey string hex&gt;"</span>);
+</code></pre>
+<h4 id="using-signing-box-object">Using &quot;Signing Box&quot; object</h4>
+<pre><code class="lang-java">int context = TvmSdk.createDefault();
+<span class="hljs-keyword">var</span> keys = Env.RNG_KEYS();
+<span class="hljs-comment">// create implementation of your handle</span>
+<span class="hljs-keyword">var</span> boxHandle = TvmSdk.await(Crypto.registerSigningBox(context, <span class="hljs-keyword">new</span> <span class="hljs-type">AppSigningBox</span>() {
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> getPublicKey() {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>;
+    }
+
+    @Override
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">String</span> sign(<span class="hljs-keyword">String</span> unsigned) {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>;
+    }
+})).handle();
+<span class="hljs-comment">// use this handle when creating contract object</span>
+<span class="hljs-keyword">var</span> contract = <span class="hljs-keyword">new</span> <span class="hljs-type">EverWalletContract</span>(context, 
+                                      <span class="hljs-keyword">new</span> <span class="hljs-type">Address</span>(<span class="hljs-string">"0:9400ec4b8629b5293bb6798bbcf3dd25d72e4f114226b5547777d0fc98fe53fa"</span>), 
+                                      <span class="hljs-keyword">new</span> <span class="hljs-type">Abi</span>.Signer.SigningBox(boxHandle));
+<span class="hljs-comment">// now contract calls will use your signing box</span>
+contract.sendTransaction(dest, value, bounce).call();
+</code></pre>
+<h3 id="smart-contracts">Smart-contracts</h3>
+<h4 id="interacting-with-already-deployed-contracts">Interacting with already deployed contracts</h4>
+<pre><code class="lang-java"><span class="hljs-comment">// to use already deployed contract, you should know its ABI and its address</span>
+<span class="hljs-keyword">var</span> deployedContractAbi = ContractAbi.ofResource(<span class="hljs-string">"artifacts/giver/GiverV2.abi.json"</span>);
+<span class="hljs-keyword">var</span> deployedContractAddress = <span class="hljs-keyword">new</span> Address(<span class="hljs-string">"0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415"</span>);
+<span class="hljs-comment">// if you don't know contract credentials, use Credentials.NONE</span>
+<span class="hljs-keyword">var</span> deployedContractCredentials = <span class="hljs-keyword">new</span> Credentials(<span class="hljs-string">"2ada2e65ab8eeab09490e3521415f45b6e42df9c760a639bcf53957550b25a16"</span>,
+                                                  <span class="hljs-string">"172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3"</span>);
+<span class="hljs-comment">// instantiate your contract</span>
+<span class="hljs-keyword">var</span> giverContract = <span class="hljs-keyword">new</span> AbstractContract(contextId,
+                                         deployedContractAddress,
+                                         deployedContractAbi,
+                                         deployedContractCredentials);
+<span class="hljs-comment">// make a call by function name</span>
+<span class="hljs-keyword">var</span> functionCallPrepare = giverContract.functionCallBuilder()
+        .setFunctionName(<span class="hljs-string">"getMessages"</span>)
+        .setFunctionInputs(<span class="hljs-built_in">Map</span>.of()) <span class="hljs-comment">// provide a map of params</span>
+        .setReturnClass(<span class="hljs-built_in">Map</span>.<span class="hljs-keyword">class</span>)
+        .build();
+<span class="hljs-comment">// if you didn't provide return class, use callAsMap() and getAsMap() to receive plain JSON</span>
+System.out.println(functionCallPrepare.getAsMap().toPrettyString());
+</code></pre>
+<p>If you don&#39;t want to write function calls by hand, 
+use <a href="#contract-generation">Contract Generation</a> tips below to generate your own Contract classes.</p>
+<h4 id="accessing-contract-account-metadata">Accessing contract account metadata</h4>
+<p>To access account metadata of certain smart-contract, get Account object from any type of Contract</p>
+<pre><code class="lang-java"><span class="hljs-attribute">Account acc</span> = contract.account();
+</code></pre>
+<p>Alternatively, you can create Account object from any address</p>
+<pre><code class="lang-java"><span class="hljs-attribute">Account acc</span> = Account.ofAddress(contextId, <span class="hljs-string">"0:ece57bcc6c530283becbbd8a3b24d3c5987cdddc3c8b7b33be6e4a6312490415"</span>);
+</code></pre>
+<p>Then, get all needed info from account</p>
+<pre><code class="lang-java">acc.<span class="hljs-keyword">boc();
+</span>acc<span class="hljs-meta">.code</span>()<span class="hljs-comment">;</span>
+acc.codeHash()<span class="hljs-comment">;</span>
+acc.<span class="hljs-keyword">balance();
+</span>acc.accType()<span class="hljs-comment">;</span>
+</code></pre>
+<h3 id="contract-generation">Contract Generation</h3>
+<h4 id="calling-generator-for-your-artifacts">Calling generator for your artifacts</h4>
+<p><code>ContractWrapper</code> class is a generator that will create java wrapper
+classes for all your contracts. You need only <code>abi.json</code> and <code>.tvc</code>
+artifacts of your contracts as a source for code generation.</p>
+<p>Run the following, specifying your artifacts and where to place
+generated classes in params:</p>
+<pre><code class="lang-java">ContractWrapper.generate(ContractAbi.<span class="hljs-keyword">of</span>Resource(<span class="hljs-string">"mycontract.abi.json"</span>).abiContract(),
+                         Tvc.<span class="hljs-keyword">of</span>Resource(<span class="hljs-string">"mycontract.tvc"</span>),
+                         Path.<span class="hljs-keyword">of</span>(<span class="hljs-string">"src/gen/java"</span>),
+                         <span class="hljs-string">"MyContract"</span>,
+                         <span class="hljs-string">"org.example.contract"</span>,
+                         <span class="hljs-string">"org.example.template"</span>,
+                         new String[]{});
+</code></pre>
+<p>Contract and template wrappers will appear in packages that you specified.</p>
+<p>If you&#39;re working with standard contracts, all wrappers are
+already generated (for <strong>Multisig Wallets</strong>, <strong>Givers</strong>, <strong>TIP3</strong> and <strong>TIP4</strong>
+contracts and so on).</p>
+<h4 id="accessing-your-newly-generated-contract-wrapper">Accessing your newly generated contract wrapper</h4>
+<p>To access contract account, create instance of your contract class by
+passing SDK Provider and address of deployed contract.</p>
+<pre><code class="lang-java"><span class="hljs-attribute">MyContract contr</span> = new MyContract(contextId, <span class="hljs-string">"0:your_contract_address"</span>);
+</code></pre>
+<h4 id="accessing-generated-function-wrappers">Accessing generated function wrappers</h4>
+<p>Now, when your contract object is created, just get handle of one 
+of functions by calling one of the contract methods.</p>
+<pre><code class="lang-java"><span class="hljs-attribute">FunctionHandle getCustodiansFunctionHandle</span> = contr.getCustodians();
+</code></pre>
+<p>Function in this example doesn&#39;t have params, but yours can have.</p>
+<h4 id="calling-functions-in-various-ways">Calling Functions in various ways</h4>
+<p>With <code>FunctionHandle</code> you can make external calls, run get methods using remote or local boc and so on like this:</p>
+<pre><code class="lang-java">MyContract.ResultOfGetCustodians custodians = getCustodiansFunctionHandle.<span class="hljs-keyword">get</span>();
+
+<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>,<span class="hljs-built_in">Object</span>&gt; custodiansMap = getCustodiansFunctionHandle.getAsMap();
+
+MyContract.ResultOfGetCustodians custodians = getCustodiansFunctionHandle.call();
+
+<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>,<span class="hljs-built_in">Object</span>&gt; custodiansMap = getCustodiansFunctionHandle.callAsMap();
+
+MyContract.ResultOfGetCustodians custodians = getCustodiansFunctionHandle.getLocal(locallySavedBoc);
+</code></pre>
+<p>All the described functions, handles and return types are auto-generated when you generate contract wrapper</p>
+<p><strong>Variants of calls to function</strong>:</p>
+<ul>
+<li><strong>get()</strong> - runs getter method and returns auto-generated type</li>
+<li><strong>call()</strong> - makes external call (make sure you added credentials to contract object if contract checks signatures)</li>
+<li><strong>getLocal()</strong> - runs getter against provided boc</li>
+<li><strong>...AsMap()</strong> - each method have AsMap variant that returns Jackson framework&#39;s JsonNode object instead of static type result</li>
+</ul>
+<h4 id="deploying-new-contracts">Deploying new contracts</h4>
+<p>Second class created by contract generator is <code>MyContractTemplate.class</code>.
+It&#39;s a companion class that stores ABI and TVC info for deployment.</p>
+<h3 id="using-wallets-and-other-standard-contract-wrappers">Using wallets and other standard contract wrappers</h3>
+<h4 id="sending-internal-message-from-multisig-wallet">Sending Internal Message from Multisig Wallet</h4>
+<pre><code class="lang-java"><span class="hljs-keyword">var</span> walletContract = <span class="hljs-keyword">new</span> <span class="hljs-type">SafeMultisigWallet</span>(contextId,<span class="hljs-string">""</span>, walletKeys);
+getCustodiansFunctionHandle.sendFrom(walletContract, CurrencyUnit.VALUE(COIN,<span class="hljs-string">"1.25"</span>), <span class="hljs-literal">true</span>, MessageFlag.FEE_EXTRA);
+</code></pre>
+<p><strong>sendFrom()</strong> method also has <strong>sendFromAsMap()</strong> variant.</p>
+<p>Calls and sends also has <strong>...Tree()</strong> variants that can 
+be used to monitor transaction tree execution and collect errors.</p>
+<h4 id="encoding-as-payload">Encoding as Payload</h4>
+<p>You can encode <code>FunctionHandle</code> as a payload for internal call like this:</p>
+<pre><code class="lang-java"><span class="hljs-attribute">var payload</span> = getCustodiansFunctionHandle.toPayload();
+</code></pre>
+<h3 id="deploying-smart-contracts">Deploying smart-contracts</h3>
+<h4 id="accessing-template">Accessing Template</h4>
+<p>You can create template object with no additional params. 
+If you didn&#39;t use generator, use <code>AbstractTemplate</code> class and 
+pass ABI and TVC to it manually.</p>
+<pre><code class="lang-java"><span class="hljs-type">MyContractTemplate</span> myTemplate = <span class="hljs-function"><span class="hljs-keyword">new</span> <span class="hljs-title">MyContractTemplate</span>();
+
+<span class="hljs-title">var</span> <span class="hljs-title">abi</span> = <span class="hljs-title">myTemplate</span>.<span class="hljs-title">abi</span>(); <span class="hljs-comment">// getting ABI from template</span>
+<span class="hljs-title">var</span> <span class="hljs-title">tvc</span> = <span class="hljs-title">myTemplate</span>.<span class="hljs-title">tvc</span>(); <span class="hljs-comment">// getting TVC from template</span>
+
+<span class="hljs-title">myTemplate</span>.<span class="hljs-title">tvc</span>().<span class="hljs-title">code</span>() <span class="hljs-comment">// getting code cell</span>
+<span class="hljs-title">myTemplate</span>.<span class="hljs-title">tvc</span>().<span class="hljs-title">codeHash</span>() <span class="hljs-comment">// getting code hash</span></span>
+</code></pre>
+<p>There are much more methods for TVC and ABI, including decoding and encoding 
+initial data, various helpers for all sort of interactions.</p>
+<h4 id="prepared-deployment-set">Prepared deployment set</h4>
+<p><code>DeployHandle</code> is a handle of prepared deployment set with all needed params. 
+As with function handles, <code>Template::prepareDeploy</code> params may vary depending on your contract -
+your static variables and constructor params.</p>
+<pre><code class="lang-java"><span class="hljs-attribute">DeployHandle deployHandle</span> = myTemplate.prepareDeploy(contextId, Credentials.NONE,<span class="hljs-string">"hello_world"</span>);
+</code></pre>
+<h4 id="variations-of-running-deploy">Variations of running deploy</h4>
+<pre><code class="lang-java"><span class="hljs-comment">// Deploys prepared contract deployment. Will work only when deploy target account address is already paid</span>
+<span class="hljs-comment">// You can check target account address by using deployHandle.toAddress() call</span>
+MyContract myContract = deployHandle.deploy();
+<span class="hljs-comment">// deploys prepared contract deployment by using funds from specified wallet</span>
+MyContract myContract = deployHandle.deployWithGiver(walletContract, CurrencyUnit.VALUE(COIN,<span class="hljs-string">"1.25"</span>));
+<span class="hljs-comment">// deploys prepared contract deployment by using funds from EverNode-SE giver</span>
+MyContract myContract = deployHandle.deployWithGiver(EverOSGiver.V2(contextId), CurrencyUnit.VALUE(COIN,<span class="hljs-string">"1.25"</span>));
+</code></pre>
+<p>Each deployment returns a contract object after deploy is done. 
+Also, you can use <code>deployHandle.toAddress()</code> if you need only address calculation.</p>
+<h4 id="switching-givers">Switching Givers</h4>
+<p>Deployment usually requires giving funds to target address of deployment. 
+Here&#39;s the example of universal deployment that switches 
+between <strong>evernode-se</strong> giver &amp; <strong>msig wallet</strong> without any additional code:</p>
+<pre><code class="lang-java">Giver <span class="hljs-attr">giver</span> = <span class="hljs-literal">null</span>;
+
+<span class="hljs-keyword">if</span> (isLocalNode()) {
+  <span class="hljs-attr">giver</span> = EverOSGiver.V2(contextId);
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-attr">giver</span> = new SafeMultisigWallet(contextId,<span class="hljs-string">"0:your_address"</span>);
+}
+
+deployHandle.deployWithGiver(giver, CurrencyUnit.VALUE(COIN,<span class="hljs-string">"1.25"</span>));
+</code></pre>
+<p>This is possible as most wallet classes are implementing Giver interface. 
+You can also generate wrappers that implements Giver interface.</p>
+<h4 id="offline-deployment">Offline deployment</h4>
+<p>Example of creation and signing offline messages for later sending. </p>
+<pre><code class="lang-java"><span class="hljs-keyword">int</span> offlineContext = TvmSdk.builder()
+                     .networkSignatureId(<span class="hljs-number">1</span>L)
+                     .networkQueryTimeout(<span class="hljs-number">300</span>_000L)
+                     .build();
+<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> template = <span class="hljs-keyword">new</span> EverWalletTemplate();
+<span class="hljs-comment">// let's generate 5 addresses that match certain condition and send them 1 coin</span>
+Predicate&lt;Address&gt; addressCondition = address -&gt; address.makeAddrStd().contains(<span class="hljs-string">"7777"</span>);
+<span class="hljs-keyword">while</span> (i &lt; <span class="hljs-number">5</span>) {
+    <span class="hljs-keyword">var</span> seed = Env.RNG_SEED(); <span class="hljs-comment">// creates new seed</span>
+    <span class="hljs-keyword">var</span> keys = seed.deriveCredentials(offlineContext); <span class="hljs-comment">// derives keys from seed</span>
+    <span class="hljs-comment">// let's calculate future TVM Wallet address</span>
+    <span class="hljs-keyword">var</span> stateInit = template.getStateInit(offlineContext, keys.publicKey(), BigInteger.ZERO);
+    <span class="hljs-keyword">var</span> address = template.getAddress(offlineContext, <span class="hljs-number">0</span>, stateInit);
+
+    <span class="hljs-comment">// check conditions if we want to deploy contract</span>
+    <span class="hljs-keyword">if</span> (addressCondition.test(address)) {
+        <span class="hljs-comment">// let's create message bodies offline</span>
+        <span class="hljs-comment">// here we send sendTransaction to ourselves</span>
+        <span class="hljs-keyword">var</span> body = <span class="hljs-keyword">new</span> EverWalletContract(offlineContext, address, keys).sendTransaction(address, CurrencyUnit.VALUE(COIN, <span class="hljs-string">"1"</span>), <span class="hljs-literal">false</span>)
+                                                                     .toPayload(<span class="hljs-literal">false</span>);
+
+        System.<span class="hljs-keyword">out</span>.printf(<span class="hljs-string">"Address: %s%n"</span>, address);
+        System.<span class="hljs-keyword">out</span>.printf(<span class="hljs-string">"Seed: %s, public: %s%n"</span>, seed.phrase(), keys.publicKey());
+        System.<span class="hljs-keyword">out</span>.printf(<span class="hljs-string">"Message body: %s%n"</span>, body);
+        System.<span class="hljs-keyword">out</span>.printf(<span class="hljs-string">"State Init: %s%n"</span>, stateInit);
+
+        <span class="hljs-keyword">int</span> onlineContext = TvmSdk.createWithEndpoint(<span class="hljs-string">"https://gql.venom.foundation/graphql"</span>);
+        <span class="hljs-comment">// let's send messages when we're online</span>
+        TvmSdk.sendExternalMessage(onlineContext,
+                                    address.makeAddrStd(),
+                                    EverWalletTemplate.DEFAULT_ABI().ABI(),
+                                    stateInit.cellBoc(),
+                                    body.cellBoc(),
+                                    <span class="hljs-literal">null</span>);
+        i++;
+    }
+}
+</code></pre>
+<h3 id="subsriptions">Subsriptions</h3>
+<p><strong>Unstable</strong> - Subscriptions were heavily changed in the last release, so there can be dragons.</p>
+<p>Subscriptions consist of Subscription.Builder class where you describe your 
+subscription details. After that, run the subscription with subscribe..() methods. 
+Subscription supports specifying multiple GQL filters, multiple consumers, 
+saving to queue, manual and auto-unsubscribing on condition.</p>
+<pre><code class="lang-java"><span class="hljs-comment">// let's specify what will consume our event:</span>
+Consumer&lt;JsonNode&gt; eventConsumer = jsonNode -&gt; System.<span class="hljs-keyword">out</span>.println(jsonNode.toPrettyString());
+<span class="hljs-comment">// describe our subscription in builder style</span>
+<span class="hljs-keyword">var</span> subscriptionBuilder = Subscriptions
+        .onAccounts(<span class="hljs-string">"acc_type"</span>, <span class="hljs-string">"id"</span>)
+        .addFilterOnSubscription(<span class="hljs-string">"id: { eq: \"&lt;your_address&gt;\" }"</span>)
+        .addFilterOnSubscription(<span class="hljs-string">"code_hash: { eq: \"&lt;your_hash&gt;\" }"</span>)
+        .addCallbackConsumer(eventConsumer)
+        .setCallbackToQueue(<span class="hljs-literal">true</span>); <span class="hljs-comment">// if you don't want to specify consumer, you can switch on adding to internal queue</span>
+<span class="hljs-comment">// let's subsribe</span>
+<span class="hljs-keyword">var</span> subscription1 = subscriptionBuilder.subscribeUntilCancel(<span class="hljs-number">1</span>);
+<span class="hljs-comment">// let's unsubscribe</span>
+subscription1.unsubscribe();
+<span class="hljs-comment">// perhaps some messages were pu in the queue?</span>
+<span class="hljs-keyword">int</span> size = subscription1.callbackQueue().size();
+<span class="hljs-comment">// let's reuse builder, but subscribe until first event is fired</span>
+<span class="hljs-keyword">var</span> subscription2 = subscriptionBuilder.subscribeUntilFirst(<span class="hljs-number">1</span>);
+<span class="hljs-comment">// another one, subscribed until certain condition</span>
+<span class="hljs-keyword">var</span> subscription3 = subscriptionBuilder.subscribeUntilCondition(<span class="hljs-number">1</span>, jsonNode -&gt; !jsonNode.<span class="hljs-keyword">get</span>(<span class="hljs-string">"accounts"</span>).elements().hasNext());
+</code></pre>
+<h3 id="currency">Currency</h3>
+<p>All solidity currency constants are available from CurrencyUnit class. 
+You can retrieve final bigint about like this</p>
+<pre><code class="lang-java"><span class="hljs-keyword">var</span> nanoAmount = CurrencyUnit.VALUE(COIN, <span class="hljs-string">"2"</span>); <span class="hljs-comment">// 2_000_000_000 nanocoins</span>
+<span class="hljs-keyword">var</span> nanoAmount2 = CurrencyUnit.VALUE(MILLICOIN, <span class="hljs-string">"500.3"</span>); <span class="hljs-comment">// 500_300_000 nanocoins</span>
+</code></pre>
+<p>If your token has custom decimals count, you can specify it like this</p>
+<pre><code class="lang-java"><span class="hljs-keyword">var</span> tokenUnit = <span class="hljs-keyword">new</span> <span class="hljs-type">CurrencyUnit</span>.CustomToken(<span class="hljs-number">12</span>); <span class="hljs-comment">// my token has 12 decimals</span>
+<span class="hljs-comment">// then use your own tokenunits in all your calls</span>
+<span class="hljs-keyword">var</span> nanoValue = CurrencyUnit.VALUE(tokenUnit, <span class="hljs-string">"2.2"</span>); <span class="hljs-comment">// 2_200_000_000_000 nanotokens</span>
+</code></pre>
+<h3 id="connecting-to-logging">Connecting to logging</h3>
+<p><strong>Jacki</strong> uses the JDK Platform Loggging (JEP 264: Platform Logging API and Service),
+so can be easily bridged to any logging framework. For example, to use log4j2, just add <code>org.apache.logging.log4j:log4j-jpl</code> to your Maven/Gradle build.</p>
+<h2 id="getting-help">Getting Help</h2>
+<p>If you can&#39;t answer in this readme or have a bug/improvement to report:</p>
+<ul>
+<li>Ask in our <a href="https://t.me/deplant_chat_en">Telegram</a> support chat</li>
+<li>Open a new <a href="https://github.com/deplant/java4ever-framework/issues/new">Issue</a></li>
+<li>Read Javadocs: <a href="https://javadoc.io/doc/tech.deplant.jacki/tvm-api"><img src="https://javadoc.io/badge2/tech.deplant.jacki/tvm-api/javadoc.svg" alt="javadoc"></a></li>
+</ul>
