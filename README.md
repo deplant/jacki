@@ -1,4 +1,4 @@
-# Jacki
+# TVM-SDK-Java
 
 [![JDK version](https://img.shields.io/badge/Java-22-green.svg)](https://shields.io/)
 [![SDK version](https://img.shields.io/badge/TVM%20SDK-v2.0.0.an-orange))](https://github.com/tvmlabs/tvm-sdk)
@@ -7,8 +7,8 @@
 [![javadoc](https://javadoc.io/badge2/tech.deplant.jacki/tvm-api/javadoc.svg)](https://javadoc.io/doc/tech.deplant.jacki/tvm-api)
 
 
-**Jacki** is a feature-rich framework for smart-contracts development, testing & accessing 
-TVM-compatible blockchains like [GOSH](https://gosh.sh/). 
+**TVM-SDK-Java** is a feature-rich framework for smart-contracts development, testing & accessing 
+TVM-compatible blockchains like [Acki Nacki](https://ackinacki.com). 
 
 ## Features
 
@@ -23,13 +23,13 @@ TVM-compatible blockchains like [GOSH](https://gosh.sh/).
 ## Contents
 
 <!-- TOC -->
-* [Jacki](#jacki)
+* [TVM-SDK-Java](#tvm-sdk-java)
   * [Features](#features)
   * [Contents](#contents)
   * [Quick start](#quick-start)
     * [Prerequisites (Java)](#prerequisites-java)
     * [Prerequisites (Kotlin)](#prerequisites-kotlin)
-    * [Add Jacki to your Maven/Gradle setup:](#add-jacki-to-your-mavengradle-setup)
+    * [Add TVM-SDK-Java to your Maven/Gradle setup:](#add-tvm-sdk-java-to-your-mavengradle-setup)
     * [Deploy your first contract](#deploy-your-first-contract)
   * [Examples and Guides](#examples-and-guides)
     * [Setting up SDK](#setting-up-sdk)
@@ -83,7 +83,7 @@ TVM-compatible blockchains like [GOSH](https://gosh.sh/).
 * Install **Gradle 8.8+**
 * Make sure to setup Gradle 8.8 and JDK 22 usage both for compilation and runtime
 
-### Add Jacki to your Maven/Gradle setup:
+### Add TVM-SDK-Java to your Maven/Gradle setup:
 
 * Gradle
 
@@ -135,7 +135,7 @@ Both steps are described below.
 
 To load TVM-SDK connection to JVM, use `TvmSdk.load()` static method. 
 Loaded TVM-SDK is a singleton, you can't use other version of library simultaneously.
-Jacki stores wrapped copy of actual TVM-SDK libraries in its resources. To load wrapped library, run:
+TVM-SDK-Java stores wrapped copy of actual TVM-SDK libraries in its resources. To load wrapped library, run:
 ```java
 TvmSdk.load();
 ```
@@ -200,7 +200,7 @@ JsonNode dataJson = TvmSdk.await(Abi.decodeBoc(contextId, types, "bocBase64Strin
 
 ### Adding ABI, TVC & other artifacts
 
-**Jacki** includes easy API to work with files and java resources
+**TVM-SDK-Java** includes easy API to work with files and java resources
 (both json-based and byte[]-based). 
 Here are simple examples of getting contract ABIs and TVCs artifacts:
 
@@ -218,10 +218,10 @@ Also, you can check `JsonFile`, `JsonResource`, `ByteFile`, `ByteResource` helpe
 
 ### Crypto
 
-**Jacki** includes basic helpers to
+**TVM-SDK-Java** includes basic helpers to
 create your seeds, key pairs and signatures. If
 you want some specific **TVM-SDK** functions, just use them
-firectly as all **TVM-SDK** API is available from **Jacki**.
+firectly as all **TVM-SDK** API is available from **TVM-SDK-Java**.
 
 #### Creating a random keypair
 
@@ -589,7 +589,7 @@ var nanoValue = CurrencyUnit.VALUE(tokenUnit, "2.2"); // 2_200_000_000_000 nanot
 
 ### Connecting to logging
 
-**Jacki** uses the JDK Platform Loggging (JEP 264: Platform Logging API and Service),
+**TVM-SDK-Java** uses the JDK Platform Loggging (JEP 264: Platform Logging API and Service),
 so can be easily bridged to any logging framework. For example, to use log4j2, just add `org.apache.logging.log4j:log4j-jpl` to your Maven/Gradle build.
 
 ## Getting Help
